@@ -1,3 +1,7 @@
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 export default function Feedback() {
   const departments = [
     { id: 1, name: "IT" },
@@ -29,6 +33,10 @@ export default function Feedback() {
     },
   ];
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
   return (
     <div className="body-page">
       <h1>Feedback List</h1>
@@ -36,7 +44,7 @@ export default function Feedback() {
         We value your feedback! Please let us know your thoughts and
         suggestions.
       </p>
-      <div className="feedback-list">
+      <div className="feedback-list" data-aos="fade-left">
         {feedbackList.map((feedback) => (
           <div key={feedback.id} className="cardFeedback">
             <p>
@@ -54,7 +62,7 @@ export default function Feedback() {
           </div>
         ))}
       </div>
-      <form className="feedback-form">
+      <form className="feedback-form" data-aos="fade-up">
         <label htmlFor="name">Name:</label>
         <input type="text" id="name" name="name" required />
         <label htmlFor="email">Email:</label>

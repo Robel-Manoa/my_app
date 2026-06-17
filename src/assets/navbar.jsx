@@ -10,7 +10,7 @@ export default function Navbar() {
         <BrowserRouter>
             <nav className="navbar">
                 <div className="head-navbar">
-                    <h1>Nexus Portal Group</h1>
+                    <h2>Nexus Portal Group</h2>
                 </div>
                 <Link to="/" className="navbar-link">Home</Link>
                 <Link to="/about" className="navbar-link">About</Link>
