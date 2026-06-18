@@ -3,6 +3,26 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { Mockannouncements } from "../data/announcement";
 
+function CardAnnouncement(props) {
+  return (
+    <div className="cardAnnoucement" data-aos="fade-up">
+      <div className="card-head">
+        <h2>{props.announcement.title}</h2>
+      </div>
+      <div className="card-body">
+        <p>{props.announcement.content}</p>
+      </div>
+      <div className="card-footer">
+        <ul>
+          <li>Author: {props.announcement.author}</li>
+          <li>Department: {props.announcement.department}</li>
+          <li>Date: {props.announcement.date}</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 export default function Announcement() {
   const [searchQuery, setSearchQuery] = useState("");
   const announcements = Mockannouncements;
@@ -40,25 +60,10 @@ export default function Announcement() {
         repudiandae dolor. Ratione!
       </p>
       {searchAnnouncements(searchQuery).map((announcement) => (
-        <div
-          className="cardAnnoucement"
+        <CardAnnouncement
           key={announcement.id}
-          data-aos="fade-up"
-        >
-          <div className="card-head">
-            <h2>{announcement.title}</h2>
-          </div>
-          <div className="card-body">
-            <p>{announcement.content}</p>
-          </div>
-          <div className="card-footer">
-            <ul>
-              <li>Author: {announcement.author}</li>
-              <li>Department: {announcement.department}</li>
-              <li>Date: {announcement.date}</li>
-            </ul>
-          </div>
-        </div>
+          announcement={announcement}
+        ></CardAnnouncement>
       ))}
     </div>
   );

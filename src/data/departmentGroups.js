@@ -10,7 +10,7 @@ export const mockDepartmentGroups = [
   },
   {
     id: "TEAM002",
-    name: "Team Beta",
+    name: "Team Betaa",
     lead: "Emily Clark",
     description:
       "The Beta team specializes in frontend development, user experience, and client-side optimization. We ensure a seamless and intuitive user interface.",

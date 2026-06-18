@@ -1,7 +1,7 @@
 // Mock user data - Replace with API call later
 export const mockUser = {
   id: "USR01",
-  name: "John Doe",
+  name: "John Doee",
   jobTitle: "Software Engineer",
   department: "Engineering",
   email: "john.doe@example.com",

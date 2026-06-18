@@ -1,7 +1,30 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import {MockfeedbackList} from "../data/feedback";
+import { MockfeedbackList } from "../data/feedback";
+
+function FeedbackList(props) {
+  return (
+    <div className="feedback-list" data-aos="fade-left">
+      {props.feedbackList.map((feedback) => (
+        <div key={feedback.id} className="cardFeedback">
+          <p>
+            <strong>Name:</strong> {feedback.name}
+          </p>
+          <p>
+            <strong>Email:</strong> {feedback.email}{" "}
+          </p>
+          <p>
+            <strong>Department:</strong> {feedback.department}
+          </p>
+          <p>
+            <strong>Message:</strong> {feedback.message}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function Feedback() {
   const departments = [
@@ -10,7 +33,6 @@ export default function Feedback() {
     { id: 3, name: "Engineering" },
   ];
   const feedbackList = MockfeedbackList;
-
 
   useEffect(() => {
     AOS.init();
@@ -23,24 +45,7 @@ export default function Feedback() {
         We value your feedback! Please let us know your thoughts and
         suggestions.
       </p>
-      <div className="feedback-list" data-aos="fade-left">
-        {feedbackList.map((feedback) => (
-          <div key={feedback.id} className="cardFeedback">
-            <p>
-              <strong>Name:</strong> {feedback.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {feedback.email}{" "}
-            </p>
-            <p>
-              <strong>Department:</strong> {feedback.department}
-            </p>
-            <p>
-              <strong>Message:</strong> {feedback.message}
-            </p>
-          </div>
-        ))}
-      </div>
+      <FeedbackList feedbackList={feedbackList}></FeedbackList>
       <form className="feedback-form" data-aos="fade-up">
         <label htmlFor="name">Name:</label>
         <input type="text" id="name" name="name" required />
