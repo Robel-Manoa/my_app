@@ -1,0 +1,151 @@
+.admin-root {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-navbar {
+  width: 15%;
+  background-color: #222;
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.admin-head-navbar h2 {
+  margin-bottom: 1.5rem;
+}
+
+.admin-navbar .navbar-link {
+  display: block;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  padding: 10px 12px;
+  border-radius: 5px;
+}
+
+.admin-navbar .navbar-link:hover {
+  background-color: #444;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.headers{
+    background-color: rgba(157, 157, 157, 0.437);
+    padding: 12px;
+    border-radius: 20px;
+}
+
+.card-content {
+    position: relative;
+    display: inline-block;
+    margin-right: 30px;
+    margin-top: 10px;
+    color: #f5f5f5;
+    border-radius: 10px;
+    padding: 20px;
+    width: calc((100%)/5);
+    text-align: right;
+}
+
+.card-content:nth-of-type(1){
+    background-color: #4f37b6;
+}
+
+.card-content:nth-of-type(2){
+    background-color: #b63d37;
+}
+
+.card-content:nth-of-type(3){
+    background-color: #2dbf5e;
+}
+
+.card-content:nth-of-type(4){
+    background-color: #f7e523;
+}
+
+.home-icone{
+    position: absolute;
+    left: 20px;
+    font-size: 25pt;
+}
+
+.card-content span{
+    font-size: 25pt;
+    font-weight: 600;
+}
+
+.section-stat{
+    position: relative;
+    display: flex;
+    column-gap: 30px;
+    padding-top: 50px;
+    justify-content: space-between;
+}
+
+.employee-stat{
+    width: 50%;
+    height: 50vh;
+}
+
+table{
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+
+table, th, td {
+  border-bottom: 1px solid black;
+  border-collapse: collapse;
+  width: auto;
+  padding: 10px;
+}
+
+table tr td button{
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+table tr td button:hover{
+    background-color: #222;
+    color: #f5f5f5;
+}
+
+.circle-stat #searchemployee{
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid gray;
+    background-color: transparent;
+    margin-right: 20px;
+}
+
+.circle-stat select{
+    width: 100px;
+    margin-left: 10px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid grey;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none; /* remove list bullets */
+  padding: 0px;
+}
+
+.pagination li a {
+  display: block; /* let links fill the list item */
+  padding: 8px 12px;
+  text-decoration: none;
+  border: 1px solid gray;
+  color: black;  
+  margin: 0 4px;
+  border-radius: 5px; /* add rounded borders */
+}

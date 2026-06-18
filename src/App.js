@@ -1,11 +1,16 @@
 import './App.css';
-import Navbar from './assets/navbar.jsx';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import PublicLayout from './layouts/PublicLayout';
+import AdminLayout from './layouts/AdminLayout';
 
 function App() {
   return (
-    <div className="App">
-      <Navbar />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/admin/*" element={<AdminLayout />} />
+        <Route path="/*" element={<PublicLayout />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
