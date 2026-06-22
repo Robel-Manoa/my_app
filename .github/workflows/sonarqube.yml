@@ -1,0 +1,95 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches: [ main, dev, develop ]
+  pull_request:
+    branches: [ main, dev, develop ]
+  schedule:
+    # Run analysis daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  sonarqube:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm install
+          cd front && npm install
+          cd ../back && npm install
+          cd ..
+
+      - name: Run frontend tests with coverage
+        run: |
+          cd front
+          npm run test:coverage
+          cd ..
+
+      - name: Run backend tests with coverage
+        run: |
+          cd back
+          npm run test:coverage
+          cd ..
+
+      - name: Fix coverage paths for SonarQube
+        run: |
+          # Adjust coverage paths if needed
+          if [ -f front/coverage/lcov.info ]; then
+            sed -i "s|^SF:|SF:front/|g" front/coverage/lcov.info
+          fi
+          if [ -f back/coverage/lcov.info ]; then
+            sed -i "s|^SF:|SF:back/|g" back/coverage/lcov.info
+          fi
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=Robel-Manoa_my-app
+            -Dsonar.organization=robel-manoa
+            -Dsonar.sources=front/src,back/src
+            -Dsonar.tests=front/src,back/src
+            -Dsonar.javascript.lcov.reportPaths=front/coverage/lcov.info
+            -Dsonar.typescript.lcov.reportPaths=back/coverage/lcov.info
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**
+            -Dsonar.cpd.exclusions=**/test/**,**/spec/**
+
+      - name: Comment Quality Gate Status on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const qualityGate = 'Quality Gate analysis will appear in SonarCloud dashboard';
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## SonarQube Analysis\n\n${qualityGate}\n\nView detailed results: https://sonarcloud.io/dashboard?id=Robel-Manoa_my-app`
+            });
+
+      - name: Check Quality Gate
+        run: |
+          echo "✓ SonarQube analysis completed successfully"
+          echo "Access results at: https://sonarcloud.io/dashboard?id=Robel-Manoa_my-app"

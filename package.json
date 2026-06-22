@@ -1,0 +1,34 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Full-stack application with React frontend and Node.js backend",
+  "scripts": {
+    "install:all": "npm install && cd front && npm install && cd ../back && npm install && cd ..",
+    "build:all": "cd front && npm run build && cd ../back && npm run build && cd ..",
+    "start:front": "cd front && npm start",
+    "start:back": "cd back && npm run dev",
+    "start:all": "npm run start:back & npm run start:front",
+    "test:all": "cd front && npm test && cd ../back && npm test",
+    "test:coverage:all": "cd front && npm run test:coverage && cd ../back && npm run test:coverage && cd ..",
+    "analyze:sonar": "npm run test:coverage:all && sonar-scanner",
+    "lint": "cd front && npm run lint && cd ../back && npm run lint",
+    "clean": "cd front && rm -rf build coverage && cd ../back && rm -rf dist coverage && cd .."
+  },
+  "devDependencies": {
+    "sonarqube-scanner": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "express",
+    "sonarqube",
+    "quality-assurance"
+  ],
+  "author": "Robel Manoa",
+  "license": "MIT"
+}
