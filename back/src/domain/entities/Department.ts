@@ -1,84 +1,66 @@
-// src/domain/entities/Department.ts
-import { v4 as uuidv4 } from "uuid";
-import { DomainException } from '../exceptions/DomainException';
+import { DomainError } from '../exceptions/DomainError'
+
+export interface DepartmentProps {
+  id: string
+  name: string
+  code: string
+  description: string
+  active: boolean
+  createdAt: string
+  updatedAt: string
+}
 
 export class Department {
-  public readonly id: string;
-  public name: string;
-  public code: string;
-  public description: string | undefined;
-  public headOfDepartmentId: string | undefined;
-  public readonly createdAt: Date;
-  public updatedAt: Date;
+  private constructor(private readonly props: DepartmentProps) {}
 
-  constructor(data: {
-    id?: string;
-    name: string;
-    code: string;
-    description?: string;
-    headOfDepartmentId?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }) {
-    this.id = data.id || uuidv4();
-    this.name = data.name;
-    this.code = data.code;
-    this.description = data.description;
-    this.headOfDepartmentId = data.headOfDepartmentId;
-    this.createdAt = data.createdAt || new Date();
-    this.updatedAt = data.updatedAt || new Date();
-
-    this.validate();
+  static create(input: Omit<DepartmentProps, 'createdAt' | 'updatedAt' | 'active'> & { active?: boolean }) {
+    Department.assertName(input.name)
+    Department.assertCode(input.code)
+    const now = new Date().toISOString()
+    return new Department({
+      ...input,
+      name: input.name.trim(),
+      code: input.code.trim().toUpperCase(),
+      description: input.description.trim(),
+      active: input.active ?? true,
+      createdAt: now,
+      updatedAt: now,
+    })
   }
 
-  private validate(): void {
-    if (!this.name || this.name.trim().length < 2) {
-      throw new DomainException(
-        "Department name must be at least 2 characters long",
-      );
-    }
+  static rehydrate(props: DepartmentProps) {
+    return new Department(props)
+  }
 
-    if (!this.code || this.code.trim().length < 2) {
-      throw new DomainException(
-        "Department code must be at least 2 characters long",
-      );
-    }
+  update(input: Partial<Pick<DepartmentProps, 'name' | 'code' | 'description' | 'active'>>) {
+    const next = { ...this.props, ...input, updatedAt: new Date().toISOString() }
+    Department.assertName(next.name)
+    Department.assertCode(next.code)
+    return new Department({
+      ...next,
+      name: next.name.trim(),
+      code: next.code.trim().toUpperCase(),
+      description: next.description.trim(),
+    })
+  }
 
-    // Code should be uppercase
-    if (this.code !== this.code.toUpperCase()) {
-      throw new DomainException("Department code must be in uppercase");
+  deactivate() {
+    return this.update({ active: false })
+  }
+
+  toJSON(): DepartmentProps {
+    return { ...this.props }
+  }
+
+  private static assertName(name: string) {
+    if (!name || name.trim().length < 2) {
+      throw new DomainError('Department name must contain at least 2 characters', 'INVALID_DEPARTMENT_NAME')
     }
   }
 
-  /**
-   * Assigne un responsable de département
-   */
-  public assignHeadOfDepartment(userId: string): void {
-    if (!userId) {
-      throw new DomainException("Head of Department ID cannot be empty");
+  private static assertCode(code: string) {
+    if (!/^[A-Z0-9-]{2,12}$/i.test(code.trim())) {
+      throw new DomainError('Department code must be 2-12 letters, numbers, or hyphens', 'INVALID_DEPARTMENT_CODE')
     }
-    this.headOfDepartmentId = userId;
-    this.updatedAt = new Date();
-  }
-
-  /**
-   * Supprime le responsable de département
-   */
-  public removeHeadOfDepartment(): void {
-    this.headOfDepartmentId = undefined;
-    this.updatedAt = new Date();
-  }
-
-  public update(data: {
-    name?: string;
-    code?: string;
-    description?: string;
-  }): void {
-    if (data.name) this.name = data.name;
-    if (data.code) this.code = data.code;
-    if (data.description !== undefined) this.description = data.description;
-
-    this.updatedAt = new Date();
-    this.validate();
   }
 }

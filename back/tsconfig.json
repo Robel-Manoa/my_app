@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "rootDir": ".",
+    "rootDir": "src",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
@@ -19,5 +19,27 @@
     "noUncheckedSideEffectImports": false,
     "moduleDetection": "legacy"
   },
-  "include": ["src", "test"]
+  "include": [
+    "src/app.ts",
+    "src/index.ts",
+    "src/adapters/http/**/*.ts",
+    "src/adapters/repositories/MemoryRepositories.ts",
+    "src/application/schemas/contracts.ts",
+    "src/application/security/**/*.ts",
+    "src/application/usecases/PortalUseCases.ts",
+    "src/domain/entities/Announcement.ts",
+    "src/domain/entities/Department.ts",
+    "src/domain/entities/Employee.ts",
+    "src/domain/entities/Feedback.ts",
+    "src/domain/entities/UserAccount.ts",
+    "src/domain/exceptions/DomainError.ts",
+    "src/domain/model/**/*.ts",
+    "src/infrastructure/config.ts",
+    "src/infrastructure/database/MemoryDatabase.ts",
+    "src/infrastructure/database/seedData.ts",
+    "src/infrastructure/middleware/errorHandler.ts",
+    "src/infrastructure/middleware/requestLogger.ts",
+    "src/infrastructure/errors.ts",
+    "src/ports/Repositories.ts"
+  ]
 }

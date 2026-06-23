@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.ra-action {
+  border: 1px solid #315c7c;
+  background: #f7fbfd;
+  color: #1f425c;
+  border-radius: 6px;
+  padding: 6px 10px;
+  text-transform: capitalize;
+  cursor: pointer;
+}

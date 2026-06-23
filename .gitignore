@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+coverage/
+.env
+
+back/dist/
+back/node_modules/
+frontend-admin/node_modules/
+frontend-admin/dist/
+frontend-employee/node_modules/
+frontend-employee/dist/
+
+npm-debug.log*
