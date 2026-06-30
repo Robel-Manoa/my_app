@@ -2,6 +2,7 @@ export interface UserProps {
   id: string
   azureId?: string
   email: string
+  password: string,
   firstName: string
   lastName: string
   role: 'EMPLOYEE' | 'HR_ADMIN' | 'DEPT_ADMIN'

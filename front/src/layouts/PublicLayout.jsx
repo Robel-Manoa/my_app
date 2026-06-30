@@ -5,6 +5,7 @@ import About from "../pages/about";
 import Contact from "../pages/contact";
 import Feedback from "../pages/feedback";
 import Announcements from "../pages/announcement";
+import Login from "../pages/login";
 
 export default function PublicLayout() {
   return (
@@ -17,6 +18,7 @@ export default function PublicLayout() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/announcemements" element={<Announcements />} />
+          <Route path="/login" element={<Login/>}/>
         </Routes>
       </div>
     </div>

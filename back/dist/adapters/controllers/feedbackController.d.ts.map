@@ -1,1 +1,0 @@
-{"version":3,"file":"feedbackController.d.ts","sourceRoot":"","sources":["../../../src/adapters/controllers/feedbackController.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAA;AAOzD,eAAO,MAAM,kBAAkB;gBACX,OAAO,OAAO,QAAQ,QAAQ,YAAY;iBAWzC,OAAO,OAAO,QAAQ,QAAQ,YAAY;CAQ9D,CAAA"}
