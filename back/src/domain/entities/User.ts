@@ -24,6 +24,10 @@ export class User {
     return this.props.email
   }
 
+  get password() {
+    return this.props.password
+  }
+
   get firstName() {
     return this.props.firstName
   }

@@ -7,16 +7,18 @@ RUN npm ci
 
 COPY . ./
 
-RUN npm install -g typescript && npm run build
+RUN npm run build
 
 FROM node:20-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
-COPY --from=builder /app/dist ./dist
+COPY --from=builder --chown=node:node /app/dist ./dist
+
+USER node
 
 EXPOSE 3001
 

@@ -41,6 +41,7 @@ export default function Login() {
         const token = response?.token;
         if (token) {
           localStorage.setItem("portalToken", token);
+          window.dispatchEvent(new Event("authchange"));
         }
         if (response?.user) {
           localStorage.setItem("portalUser", JSON.stringify(response.user));

@@ -14,8 +14,10 @@ declare global {
   }
 }
 
+type ActorUserLookup = Pick<UserRepository, "findById" | "findByEmail">;
+
 export const actorMiddleware =
-  (users: UserRepository) =>
+  (users: ActorUserLookup) =>
   async (req: Request, _res: Response, next: NextFunction) => {
     try {
       if (

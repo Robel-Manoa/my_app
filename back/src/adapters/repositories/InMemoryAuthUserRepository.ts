@@ -2,11 +2,8 @@ import bcrypt from "bcryptjs";
 import { User } from "../../domain/entities/User";
 import { UserAccountProps } from "../../domain/entities/UserAccount";
 import { UserRepository as DomainUserRepository } from "../../domain/ports/UserRepository";
-import { UserRepository as PortalUserRepository } from "../../ports/Repositories";
 
-export class InMemoryAuthUserRepository
-  implements DomainUserRepository, PortalUserRepository
-{
+export class InMemoryAuthUserRepository implements DomainUserRepository {
   private readonly byId = new Map<string, any>();
   private readonly byEmail = new Map<string, any>();
   private readonly byAzureId = new Map<string, any>();
@@ -88,13 +85,9 @@ export class InMemoryAuthUserRepository
     };
   }
 
-  async list(): Promise<UserAccountProps[]> {
-    return Array.from(this.byId.values()).map((record) => this.toAccountProps(record));
-  }
-
-  async findById(id: string): Promise<UserAccountProps | undefined> {
+  async findById(id: string): Promise<User | null> {
     const record = this.byId.get(id);
-    return record ? this.toAccountProps(record) : undefined;
+    return record ? this.toDomainUser(record) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -107,9 +100,21 @@ export class InMemoryAuthUserRepository
     return record ? this.toDomainUser(record) : null;
   }
 
-  async save(user: any): Promise<any> {
+  async save(user: User): Promise<User> {
     const record = this.normalizeRecord(user);
     this.persist(record);
-    return record;
+    return this.toDomainUser(record);
+  }
+
+  // Account-shaped lookups for callers (e.g. actorMiddleware) that only need
+  // the role/activity fields, not the full auth record with the password hash.
+  async findAccountById(id: string): Promise<UserAccountProps | undefined> {
+    const record = this.byId.get(id);
+    return record ? this.toAccountProps(record) : undefined;
+  }
+
+  async findAccountByEmail(email: string): Promise<UserAccountProps | undefined> {
+    const record = this.byEmail.get(email.toLowerCase());
+    return record ? this.toAccountProps(record) : undefined;
   }
 }

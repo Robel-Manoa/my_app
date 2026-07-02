@@ -20,7 +20,7 @@
   margin-bottom: 5%;
 }
 
-.navbar-link {
+.navbar-link, #navbar-link {
   display: block;
   color: white;
   padding: 16px;
@@ -28,7 +28,7 @@
   text-align: left;
 }
 
-.navbar-link:hover {
+.navbar-link:hover, #navbar-link:hover {
   background-color: #ddd;
   color: black;
   transition: 0.3s;

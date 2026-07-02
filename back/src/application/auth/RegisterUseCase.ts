@@ -48,9 +48,6 @@ export class RegisterUseCase {
     })
 
     const savedUser = await this.userRepository.save(user)
-    return {
-      ...user.toJSON(),
-      ...savedUser,
-    }
+    return savedUser.toJSON()
   }
 }

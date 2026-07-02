@@ -22,7 +22,7 @@ import {
 import { InMemoryAuthUserRepository } from "./adapters/repositories/InMemoryAuthUserRepository";
 
 const app = express();
-app.disable("Powerd-by-BakerTilly");
+app.disable("x-powered-by");
 
 const dbPool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -57,7 +57,10 @@ app.use(
 
 app.use(
   "/api",
-  actorMiddleware(authUserRepository),
+  actorMiddleware({
+    findById: (id) => authUserRepository.findAccountById(id),
+    findByEmail: (email) => authUserRepository.findAccountByEmail(email),
+  }),
   createRoutes(useCases, authController),
 );
 

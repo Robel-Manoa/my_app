@@ -1,0 +1,75 @@
+État général de l’application – 02/07/2026
+========================================
+
+Résumé rapide
+------------
+L’application est globalement fonctionnelle sur le plan du prototype, avec une séparation claire entre :
+- une interface employé (frontend React/CRA)
+- une API backend (Express + TypeScript)
+- une interface admin (React Admin + Vite)
+
+Le cœur du flux d’authentification et de navigation employé a été branché sur l’API backend. L’interface employé peut désormais se connecter, stocker un token localement, rediriger vers la page de connexion si aucune session n’est ouverte, et afficher un bouton de déconnexion dans la navigation.
+
+Ce qui fonctionne actuellement
+-----------------------------
+1. Authentification employé
+- Le frontend employé peut envoyer les identifiants vers l’API backend.
+- Un token est stocké dans le stockage local du navigateur.
+- La navigation vérifie la présence de ce token pour décider si l’utilisateur est connecté ou non.
+- Si aucun token n’est présent, l’application redirige vers la page de connexion.
+- Le bouton Logout est visible quand une session est active.
+
+2. Interface employé
+- La page d’accueil affiche un état basé sur les données backend (ou un rendu de transition si l’API ne répond pas encore complètement).
+- Les pages d’annonces et de feedback sont branchées sur l’API, avec un chargement asynchrone.
+- La logique de navigation est en place pour empêcher l’accès aux pages protégées sans session.
+
+3. Backend API
+- Les routes principales sont présentes : santé, auth, departments, announcements, feedback.
+- Les use cases sont en place pour l’authentification, l’enregistrement, la lecture des données et la soumission de feedback.
+- Le backend est capable de répondre à des appels API sur les routes principales.
+
+4. Build frontend
+- La compilation du frontend employé a été vérifiée avec succès.
+- Le build produit bien un bundle de production, avec seulement des warnings ESLint non bloquants.
+
+Ce qui reste à faire / à vérifier
+--------------------------------
+1. Build backend
+- Le build TypeScript du backend échoue actuellement.
+- Les erreurs observées concernent principalement :
+  - des incompatibilités de types dans le repository d’authentification en mémoire
+  - des déclarations de types manquantes pour les modules cors, cookie-parser et pg
+- Ces problèmes n’empêchent pas forcément l’exécution à l’instant dans tous les scénarios, mais ils bloquent la compilation propre du backend.
+
+2. Vérification runtime complète
+- Il reste à vérifier de bout en bout le parcours complet :
+  - ouverture de l’application sans session → redirection vers login
+  - connexion réussie → accès aux pages protégées
+  - déconnexion → retour vers login
+  - soumission de feedback → réponse API correcte
+  - rechargement de page avec session persistée → comportement attendu
+
+3. Cohérence des données employé
+- Le frontend employé est maintenant orienté vers l’API, mais certaines données d’affichage pourraient encore être enrichies ou normalisées pour refléter exactement les informations métiers attendues.
+- La logique d’authentification pourrait être renforcée pour intégrer une vraie session utilisateur plus robuste (par exemple via cookie HttpOnly ou stockage plus standardisé).
+
+4. Nettoyage / qualité
+- Des warnings ESLint subsistent côté frontend, notamment sur des liens non accessibles et une variable non utilisée.
+- Ces warnings ne bloquent pas le build, mais ils méritent un nettoyage pour une meilleure qualité de code.
+
+Comportement actuel de l’application
+----------------------------------
+Au démarrage, si aucune session n’est détectée, l’application dirige l’utilisateur vers la page de connexion.
+Après connexion, l’utilisateur peut naviguer dans les pages principales et voir le bouton de déconnexion dans la barre de navigation.
+Le flux de base est donc maintenant conforme à un comportement “session-based” simple et fonctionnel.
+
+En revanche, l’application n’est pas encore totalement “propre” sur le plan technique : le backend ne compile pas encore complètement et certains points de robustesse doivent encore être validés.
+
+Conclusion
+----------
+Le prototype est dans un état globalement prometteur :
+- l’authentification employé est en place,
+- la redirection selon la session fonctionne,
+- l’interface employé est branchée à l’API,
+- mais le backend doit encore être corrigé côté TypeScript/build pour atteindre un état plus stable et production-ready.

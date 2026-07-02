@@ -1,9 +1,12 @@
 FROM node:20-alpine
 
 WORKDIR /app
-COPY package*.json ./
+RUN chown node:node /app
+USER node
+
+COPY --chown=node:node package*.json ./
 RUN npm install
-COPY . .
+COPY --chown=node:node . .
 
 ENV HOST=0.0.0.0
 EXPOSE 3000
