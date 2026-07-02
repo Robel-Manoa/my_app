@@ -30,13 +30,14 @@ export const createRoutes = (
     res.json({ status: "ok", service: "internal-company-portal" }),
   );
 
-  // Hooked up your authentic controller actions here
   router.post("/auth/login", authController.login);
+  router.post("/auth/register", authController.register);
   router.post("/auth/logout", authController.logout);
 
   router.get("/auth/me", async (req, res, next) => {
     try {
-      res.json(await useCases.me(requireActor(req)));
+      const actor = requireActor(req);
+      res.json({ user: actor, employee: null });
     } catch (error) {
       next(error);
     }

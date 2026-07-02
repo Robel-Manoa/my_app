@@ -1,29 +1,52 @@
 import { Request, Response } from "express";
 import { LoginUseCase } from "../../application/auth/LoginUseCase";
+import { RegisterUseCase } from "../../application/auth/RegisterUseCase";
 
 export class AuthController {
-  constructor(private loginUseCase: LoginUseCase) {}
+  constructor(
+    private loginUseCase: LoginUseCase,
+    private registerUseCase?: RegisterUseCase,
+  ) {}
 
   login = async (req: Request, res: Response): Promise<void> => {
     try {
-      // 1. Extract standard credentials from the login form body
       const { email, password } = req.body;
-
-      // 2. Execute the updated use case
       const { token, user } = await this.loginUseCase.execute(email, password);
 
-      // 3. Store the JWT in your HttpOnly cookie
       res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        maxAge: 24 * 60 * 60 * 1000,
       });
 
-      res.json({ message: "Connexion réussie", user });
+      res.json({ message: "Connexion réussie", user, token });
     } catch (error: any) {
       const statusCode = error.name === "InvalidCredentialsError" ? 401 : 500;
-      res.status(statusCode).json({ message: error.message });
+      res.status(statusCode).json({ message: error.message || "Erreur d'authentification" });
+    }
+  };
+
+  register = async (req: Request, res: Response): Promise<void> => {
+    try {
+      if (!this.registerUseCase) {
+        res.status(500).json({ message: "Register service unavailable" });
+        return;
+      }
+
+      const { email, firstName, lastName, password, role } = req.body;
+      const user = await this.registerUseCase.execute({
+        email,
+        firstName,
+        lastName,
+        password,
+        role,
+      });
+
+      res.status(201).json({ message: "Employé enregistré", user });
+    } catch (error: any) {
+      const statusCode = error.name === "UserAlreadyExistsError" ? 409 : 400;
+      res.status(statusCode).json({ message: error.message || "Impossible d'enregistrer l'employé" });
     }
   };
 

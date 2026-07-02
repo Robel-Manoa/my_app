@@ -17,7 +17,7 @@ export default function PublicLayout() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/feedback" element={<Feedback />} />
-          <Route path="/announcemements" element={<Announcements />} />
+          <Route path="/announcements" element={<Announcements />} />
           <Route path="/login" element={<Login/>}/>
         </Routes>
       </div>

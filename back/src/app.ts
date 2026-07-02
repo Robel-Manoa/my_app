@@ -3,9 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { Pool } from "pg";
 
-import { PostgreSqlUserRepository } from "./adapters/repositories/PostgreSqlUserRepository";
 import { AuthController } from "./adapters/controllers/AuthController";
 import { LoginUseCase } from "./application/auth/LoginUseCase";
+import { RegisterUseCase } from "./application/auth/RegisterUseCase";
 import { createRoutes } from "./adapters/http/routes";
 import { actorMiddleware } from "./adapters/http/context";
 import { PortalUseCases } from "./application/usecases/PortalUseCases";
@@ -19,23 +19,20 @@ import {
   MemoryFeedbackRepository,
   MemoryUserRepository,
 } from "./adapters/repositories/MemoryRepositories";
+import { InMemoryAuthUserRepository } from "./adapters/repositories/InMemoryAuthUserRepository";
 
 const app = express();
 app.disable("Powerd-by-BakerTilly");
 
-// ====================== DATABASE ======================
 const dbPool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-// ====================== DEPENDENCIES ======================
-const sqlUserRepository = new PostgreSqlUserRepository(dbPool);
+const authUserRepository = new InMemoryAuthUserRepository();
+const loginUseCase = new LoginUseCase(authUserRepository);
+const registerUseCase = new RegisterUseCase(authUserRepository);
+const authController = new AuthController(loginUseCase, registerUseCase);
 
-// Cleaned up: No more AzureAuthProvider instance required!
-const loginUseCase = new LoginUseCase(sqlUserRepository);
-const authController = new AuthController(loginUseCase);
-
-// ====================== MEMORY REPOSITORIES (Legacy) ======================
 const memoryUserRepository = new MemoryUserRepository(memoryDatabase);
 const useCases = new PortalUseCases(
   new MemoryDepartmentRepository(memoryDatabase),
@@ -45,24 +42,22 @@ const useCases = new PortalUseCases(
   new MemoryFeedbackRepository(memoryDatabase),
 );
 
-// ====================== MIDDLEWARES ======================
 app.use(express.json());
 app.use(cookieParser());
 app.use(requestLogger);
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:3002"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-User-Id"],
   }),
 );
 
-// ====================== ROUTES ======================
 app.use(
   "/api",
-  actorMiddleware(memoryUserRepository),
+  actorMiddleware(authUserRepository),
   createRoutes(useCases, authController),
 );
 
